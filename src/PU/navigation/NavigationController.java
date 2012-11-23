@@ -50,7 +50,7 @@ public class NavigationController implements ActionListener {
         wellcome.setBackground(Color.red);
         //mainWindows.add(wellcome);
         mainWindows.add("South", wellcome);
-        //wellcome.setVisible(true);
+        wellcome.setVisible(true);
     }
 
     private void initComponentStory() {
@@ -66,7 +66,7 @@ public class NavigationController implements ActionListener {
         story.add(back);
         story.setBackground(Color.red);
         //mainWindows.add(story);
-        mainWindows.add("South",story);
+        //mainWindows.add("South",story);
         //story.setVisible(false);
     }
 
@@ -85,7 +85,7 @@ public class NavigationController implements ActionListener {
         gameMode.add(back);
         gameMode.setBackground(Color.red);
         //mainWindows.add(gameMode);
-        mainWindows.add("South", gameMode);
+        //mainWindows.add("South", gameMode);
         //gameMode.setVisible(false);
     }
 
@@ -130,11 +130,13 @@ public class NavigationController implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "Start":
+                mainWindows.add("South",gameMode);
                 wellcome.setVisible(false);
                 story.setVisible(false);
                 gameMode.setVisible(true);
                 break;
             case "Story":
+                mainWindows.add("South",story);
                 wellcome.setVisible(false);
                 gameMode.setVisible(false);
                 story.setVisible(true);
