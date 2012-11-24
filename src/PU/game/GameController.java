@@ -38,7 +38,6 @@ public class GameController implements ActionListener {
     private Chronometer crono;
     private Brick barraJ1;
     private Brick barraJ2;
-    //private Renderer renderer;
     private AnimationController animationcontroller;
     private ConnectionManager conexion;
     private JTextField mensajeU;
@@ -46,7 +45,6 @@ public class GameController implements ActionListener {
     private boolean pausado = false;
     private JApplet vp;
     private Graphics g;
-    //private String gameMode;
     private KeyboardController keyboardController;
 
     public GameController(Graphics g, JTextField mensajeU, JTextField mensajeO, JApplet vp, String gameMode) {
@@ -91,7 +89,7 @@ public class GameController implements ActionListener {
     private void initMotorGraphics() {
         Renderer renderer;
         renderer = new Renderer(escena, g);
-        animationcontroller = new AnimationController(escena,keyboardController);
+        animationcontroller = new AnimationController(escena, keyboardController, crono);
         animationcontroller.addBrick(barraJ1);
         animationcontroller.addBrick(barraJ2);
         renderer.start();

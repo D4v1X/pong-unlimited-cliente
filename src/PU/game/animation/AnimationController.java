@@ -29,17 +29,17 @@ public class AnimationController extends Thread {
     private Drawable escena;
     private List<Ball> ballDrawable;
     private List<Brick> brickJugadores;
-    private Chronometer crono;
     private final KeyboardController keyboard;
     private Timer tasks = new Timer();
+    private final Chronometer crono;
     
 
-    public AnimationController(Composite escena, KeyboardController keyboardController) {
+    public AnimationController(Composite escena, KeyboardController keyboardController, Chronometer crono) {
         this.escena = escena;
         this.ballDrawable = Collections.synchronizedList(new ArrayList<Ball>());
         this.brickJugadores = Collections.synchronizedList(new ArrayList<Brick>());
-        crono = new Chronometer();
         this.keyboard = keyboardController;
+        this.crono = crono;
     }
 
     @Override
@@ -48,7 +48,6 @@ public class AnimationController extends Thread {
         Ball ballC = null;
         Marcador marcador = (Marcador) escena.getChild(1);
         Boundary contorno = (Boundary) escena.getChild(0);
-        escena.add(crono);
         tasks.schedule(new TaskBricks(escena), 0, 10000);
         tasks.schedule(new TaskBalls(escena,ballDrawable), 0, 5000);
         crono.start();
