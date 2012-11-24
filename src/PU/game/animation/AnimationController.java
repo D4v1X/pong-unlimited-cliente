@@ -4,22 +4,19 @@
  */
 package PU.game.animation;
 
+import PU.game.animation.task.TaskBalls;
+import PU.game.animation.task.TaskBricks;
 import drawable.Boundary;
 import drawable.Chronometer;
 import drawable.Composite;
 import drawable.Drawable;
 import drawable.Marcador;
-import drawable.Position;
 import drawable.movable.Ball;
 import drawable.movable.Brick;
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-import javax.swing.Timer;
+import java.util.Timer;
 
 /**
  *
@@ -34,49 +31,7 @@ public class AnimationController extends Thread {
     private List<Brick> brickJugadores;
     private Chronometer crono;
     private final KeyboardController keyboard;
-    private Timer createBalls = new Timer(5000, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            Random rnd = new Random();
-            Ball ball;
-            int dx = rnd.nextInt(3) - 1;
-            int dy = rnd.nextInt(3) - 1;
-            if (dx == 0 && dy == 0) {
-                dx++;
-                dy++;
-            }
-            if (dx == 0) {
-                dx--;
-            }
-            if (dy == 0) {
-                dy--;
-            }
-            ball = new Ball((dx), (dy), (2 + rnd.nextInt(8)),
-                    new Color(rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)),
-                    new Position(300, 300));
-            escena.add(ball);
-            ballDrawable.add(ball);
-        }
-    });
-    private Timer createBricks = new Timer(10000, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            Random rnd = new Random();
-            int width = (20 + rnd.nextInt(20));
-            int heigth = (10 + rnd.nextInt(30));
-            int x = 50 + rnd.nextInt(250);
-            int y = 50 + rnd.nextInt(450);
-            Brick brick1, brick2;
-            brick1 = new Brick(2,
-                    new Position(x, y),
-                    width, heigth);
-            brick2 = new Brick(2,
-                    new Position(600 - width - x, y),
-                    width, heigth);
-            escena.add(brick1);
-            escena.add(brick2);
-        }
-    });
+    private Timer tasks = new Timer();
     
 
     public AnimationController(Composite escena, KeyboardController keyboardController) {
@@ -94,8 +49,8 @@ public class AnimationController extends Thread {
         Marcador marcador = (Marcador) escena.getChild(1);
         Boundary contorno = (Boundary) escena.getChild(0);
         escena.add(crono);
-        createBalls.start();
-        createBricks.start();
+        tasks.schedule(new TaskBricks(escena), 0, 10000);
+        tasks.schedule(new TaskBalls(escena,ballDrawable), 0, 5000);
         crono.start();
         stopping = false;
         while (!stopping) {
@@ -124,8 +79,8 @@ public class AnimationController extends Thread {
                  ballDrawable.remove(obj);
                  }*/
                 if (marcador.acabado()) {
-                    createBalls.stop();
-                    createBricks.stop();
+                    tasks.cancel();
+                    tasks.cancel();
                     crono.stop();
                     setStopping(true);
                 }
@@ -154,32 +109,24 @@ public class AnimationController extends Thread {
         this.stopping = stopping;
     }
 
-    public void setStoppingballs(boolean stopping) {
-        if (stopping) {
-            createBalls.stop();
-        } else {
-            createBalls.start();
-        }
-    }
+//    public void setStoppingballs(boolean stopping) {
+//        if (stopping) {
+//            createBalls.stop();
+//        } else {
+//            createBalls.start();
+//        }
+//    }
 
-    public void setStoppingbricks(boolean stopping) {
-        if (stopping) {
-            createBricks.stop();
-        } else {
-            createBricks.start();
-        }
-    }
+//    public void setStoppingbricks(boolean stopping) {
+//        if (stopping) {
+//            createBricks.stop();
+//        } else {
+//            createBricks.start();
+//        }
+//    }
 
     public Drawable getEscena() {
         return escena;
-    }
-
-    public void setEscena(Drawable escena) {
-        this.escena = escena;
-    }
-
-    public List<Ball> getBallDrawable() {
-        return ballDrawable;
     }
 
     public void setBallDrawable(List<Ball> ballDrawable) {

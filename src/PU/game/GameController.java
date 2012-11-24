@@ -55,21 +55,12 @@ public class GameController implements ActionListener {
         this.mensajeO = mensajeO;
         this.vp = vp;
         initScene(gameMode);
+        initControl();
         initMotorGraphics();
         vp.addKeyListener(keyboardController);//Control de Teclado
         initConnection();
-        initControl();
+        
     }
-    /*
-     public GameController(JApplet vp, Graphics g, String gameMode) {
-     this.vp = vp;
-     this.g = g;
-     this.gameMode = gameMode;
-     initScene();
-     initMotorGraphics();
-     vp.addKeyListener(animationcontroller);//Control de Teclado
-     initConnection();
-     }*/
 
     private void initScene(String gameMode) {
         escena = new Composite();
@@ -153,18 +144,18 @@ public class GameController implements ActionListener {
             mensajeO.setText("Cargado de BD");
         }
         //Control del Pause
-        if (e.getActionCommand().equals("Pause")) {
-            if (pausado) {
-                pausado = false;
-                animationcontroller.setStoppingballs(pausado);
-                animationcontroller.setStoppingbricks(pausado);
-
-            } else {
-                pausado = true;
-                animationcontroller.setStoppingballs(pausado);
-                animationcontroller.setStoppingbricks(pausado);
-            }
-
-        }
+//        if (e.getActionCommand().equals("Pause")) {
+//            if (pausado) {
+//                pausado = false;
+//                animationcontroller.setStoppingballs(pausado);
+//                animationcontroller.setStoppingbricks(pausado);
+//
+//            } else {
+//                pausado = true;
+//                animationcontroller.setStoppingballs(pausado);
+//                animationcontroller.setStoppingbricks(pausado);
+//            }
+//
+//        }
     }
 }
