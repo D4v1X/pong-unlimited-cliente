@@ -5,10 +5,12 @@
 package PU.game;
 
 import PU.game.animation.AnimationController;
+import PU.game.animation.KeyboardController;
 import PU.game.view.Renderer;
 import connection.ConnectionController;
 import connection.ConnectionManager;
 import drawable.Boundary;
+import drawable.Chronometer;
 import drawable.Composite;
 import drawable.Drawable;
 import drawable.Marcador;
@@ -33,9 +35,10 @@ public class GameController implements ActionListener {
     private Composite escena;
     private Boundary contorno;
     private Marcador marcador;
+    private Chronometer crono;
     private Brick barraJ1;
     private Brick barraJ2;
-    private Renderer renderer;
+    //private Renderer renderer;
     private AnimationController animationcontroller;
     private ConnectionManager conexion;
     private JTextField mensajeU;
@@ -43,7 +46,8 @@ public class GameController implements ActionListener {
     private boolean pausado = false;
     private JApplet vp;
     private Graphics g;
-    private String gameMode;
+    //private String gameMode;
+    private KeyboardController keyboardController;
 
     public GameController(Graphics g, JTextField mensajeU, JTextField mensajeO, JApplet vp, String gameMode) {
         this.g = g;
@@ -52,8 +56,9 @@ public class GameController implements ActionListener {
         this.vp = vp;
         initScene(gameMode);
         initMotorGraphics();
-        vp.addKeyListener(animationcontroller);//Control de Teclado
+        vp.addKeyListener(keyboardController);//Control de Teclado
         initConnection();
+        initControl();
     }
     /*
      public GameController(JApplet vp, Graphics g, String gameMode) {
@@ -70,6 +75,7 @@ public class GameController implements ActionListener {
         escena = new Composite();
         contorno = new Boundary(new Position(0, 0), vp.getWidth(), vp.getHeight() - 40);
         marcador = new Marcador();
+        crono = new Chronometer();
         switch (gameMode) {
             case "PvE":
                 barraJ1 = new Brick(1, new Position(0, 0), 10, contorno.getHeight()+20);
@@ -86,17 +92,23 @@ public class GameController implements ActionListener {
         }
         escena.add(contorno);
         escena.add(marcador);
+        escena.add(crono);
         escena.add(barraJ1);
         escena.add(barraJ2);
     }
 
     private void initMotorGraphics() {
+        Renderer renderer;
         renderer = new Renderer(escena, g);
-        animationcontroller = new AnimationController(escena);
+        animationcontroller = new AnimationController(escena,keyboardController);
         animationcontroller.addBrick(barraJ1);
         animationcontroller.addBrick(barraJ2);
         renderer.start();
         animationcontroller.start();
+    }
+    
+    private void initControl(){
+        keyboardController = new KeyboardController(barraJ1,barraJ2,contorno);
     }
 
     private void initConnection() {

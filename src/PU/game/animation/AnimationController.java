@@ -15,8 +15,6 @@ import drawable.movable.Brick;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,14 +25,15 @@ import javax.swing.Timer;
  *
  * @author David
  */
-public class AnimationController extends Thread implements KeyListener {
+//public class AnimationController extends Thread implements KeyListener {
+public class AnimationController extends Thread {
 
     private boolean stopping;
     private Drawable escena;
     private List<Ball> ballDrawable;
-    private List<Brick> brickDrawable;
-    private boolean p1FlagUp, p1FlagDown, p2FlagUp, p2FlagDown;
+    private List<Brick> brickJugadores;
     private Chronometer crono;
+    private final KeyboardController keyboard;
     private Timer createBalls = new Timer(5000, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -78,12 +77,14 @@ public class AnimationController extends Thread implements KeyListener {
             escena.add(brick2);
         }
     });
+    
 
-    public AnimationController(Composite escena) {
+    public AnimationController(Composite escena, KeyboardController keyboardController) {
         this.escena = escena;
         this.ballDrawable = Collections.synchronizedList(new ArrayList<Ball>());
-        this.brickDrawable = Collections.synchronizedList(new ArrayList<Brick>());
+        this.brickJugadores = Collections.synchronizedList(new ArrayList<Brick>());
         crono = new Chronometer();
+        this.keyboard = keyboardController;
     }
 
     @Override
@@ -115,8 +116,8 @@ public class AnimationController extends Thread implements KeyListener {
                     }
                 }
                 //mover barras
-                moveP1();
-                moveP2();
+                keyboard.moveP1();
+                keyboard.moveP2();
                 /*
                  if (obj != null && obj instanceof Ball && ballDrawable.size() > 1) {
                  escena.remove(obj);
@@ -142,7 +143,7 @@ public class AnimationController extends Thread implements KeyListener {
     }
 
     public void addBrick(Brick brick) {
-        this.brickDrawable.add(brick);
+        this.brickJugadores.add(brick);
     }
 
     public boolean isStopping() {
@@ -185,70 +186,4 @@ public class AnimationController extends Thread implements KeyListener {
         this.ballDrawable = ballDrawable;
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-        System.out.println("wep");
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        System.out.println("press");
-        switch (e.getKeyCode()) {
-            // Move 1
-            case KeyEvent.VK_W:
-                p1FlagUp = true;
-                break;
-            case KeyEvent.VK_S:
-                p1FlagDown = true;
-                break;
-            // Move 2
-            case KeyEvent.VK_UP:
-                p2FlagUp = true;
-                break;
-            case KeyEvent.VK_DOWN:
-                p2FlagDown = true;
-                break;
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        System.out.println("release");
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_W:
-                p1FlagUp = false;
-                break;
-            case KeyEvent.VK_S:
-                p1FlagDown = false;
-                break;
-            case KeyEvent.VK_UP:
-                p2FlagUp = false;
-                break;
-            case KeyEvent.VK_DOWN:
-                p2FlagDown = false;
-                break;
-        }
-    }
-
-    public void moveP1() {
-        Brick brick1 = brickDrawable.get(0);
-        Boundary contorno = (Boundary) escena.getChild(0);
-        if (p1FlagUp == true && brick1.getPosition().getY() >= contorno.getPosition().getY()) {
-            brick1.moveDown();
-        }
-        if (p1FlagDown == true && brick1.getPosition().getY() + brick1.getHeight() <= contorno.getHeight()) {
-            brick1.moveUp();
-        }
-    }
-
-    public void moveP2() {
-        Brick brick2 = brickDrawable.get(1);
-        Boundary contorno = (Boundary) escena.getChild(0);
-        if (p2FlagUp == true && brick2.getPosition().getY() >= contorno.getPosition().getY()) {
-            brick2.moveDown();
-        }
-        if (p2FlagDown == true && brick2.getPosition().getY() + brick2.getHeight() <= contorno.getHeight()) {
-            brick2.moveUp();
-        }
-    }
 }
