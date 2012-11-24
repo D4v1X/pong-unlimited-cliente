@@ -77,6 +77,8 @@ public class AnimationController extends Thread {
                  escena.remove(obj);
                  ballDrawable.remove(obj);
                  }*/
+                //pruebas:
+                //System.out.println(crono.getTime());
                 if (marcador.acabado()) {
                     tasks.cancel();
                     tasks.cancel();
