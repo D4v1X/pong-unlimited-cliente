@@ -108,22 +108,6 @@ public class AnimationController extends Thread {
         this.stopping = stopping;
     }
 
-//    public void setStoppingballs(boolean stopping) {
-//        if (stopping) {
-//            createBalls.stop();
-//        } else {
-//            createBalls.start();
-//        }
-//    }
-
-//    public void setStoppingbricks(boolean stopping) {
-//        if (stopping) {
-//            createBricks.stop();
-//        } else {
-//            createBricks.start();
-//        }
-//    }
-
     public Drawable getEscena() {
         return escena;
     }

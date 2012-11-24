@@ -141,19 +141,5 @@ public class GameController implements ActionListener {
             animationcontroller.setBallDrawable(ballDrawableCargada);
             mensajeO.setText("Cargado de BD");
         }
-        //Control del Pause
-//        if (e.getActionCommand().equals("Pause")) {
-//            if (pausado) {
-//                pausado = false;
-//                animationcontroller.setStoppingballs(pausado);
-//                animationcontroller.setStoppingbricks(pausado);
-//
-//            } else {
-//                pausado = true;
-//                animationcontroller.setStoppingballs(pausado);
-//                animationcontroller.setStoppingbricks(pausado);
-//            }
-//
-//        }
     }
 }
