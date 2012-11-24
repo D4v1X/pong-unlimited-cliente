@@ -5,7 +5,6 @@
 package PU.navigation;
 
 import PU.game.GameController;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -27,30 +26,54 @@ public class NavigationController implements ActionListener {
     private JApplet mainWindows;
     private JPanel wellcome = new JPanel();
     private JPanel gameMode = new JPanel();
-    //private JPanel game = new JPanel(true);
     private JPanel story = new JPanel();
+    private JPanel sPlayer = new JPanel();
+    private JPanel lPanel = new JPanel();
     private GameController gameController;
     private JTextField mensaje;
     private JTextField operacion;
 
+    public JApplet getMainWindows() {
+        return mainWindows;
+    }
+
+    
+    
     public NavigationController(JApplet mainWindows) {
         this.mainWindows = mainWindows;
+        initLogin();
         initComponentWellcome();
         initComponentStory();
         initComponentGameMode();
+        initSurvival();
     }
 
+    private void initLogin()
+    {
+        JTextField userT  = new JTextField(10);
+        JTextField passT  = new JTextField(10);
+        JLabel user = new JLabel("user");
+        JLabel pass = new JLabel("pass");
+        JButton login = new JButton("Login");
+        JButton register = new JButton("Register");
+        login.addActionListener(this);
+        register.addActionListener(this);
+        lPanel.add(user);lPanel.add(userT);
+        lPanel.add(pass);lPanel.add(passT);
+        lPanel.add(login);lPanel.add(register);
+        mainWindows.add("South", lPanel);
+        lPanel.setVisible(true);       
+    }
+    
+    
     private void initComponentWellcome() {
         JButton start = new JButton("Start");
-        JButton story = new JButton("Story");
+        JButton storyB = new JButton("Story");
         start.addActionListener(this);
-        story.addActionListener(this);
+        storyB.addActionListener(this);
         wellcome.add(start);
-        wellcome.add(story);
+        wellcome.add(storyB);
         wellcome.setBackground(Color.red);
-        //mainWindows.add(wellcome);
-        mainWindows.add("South", wellcome);
-        wellcome.setVisible(true);
     }
 
     private void initComponentStory() {
@@ -65,14 +88,11 @@ public class NavigationController implements ActionListener {
         story.add(tp);
         story.add(back);
         story.setBackground(Color.red);
-        //mainWindows.add(story);
-        //mainWindows.add("South",story);
-        //story.setVisible(false);
     }
 
     private void initComponentGameMode() {
-        JButton pve = new JButton("PvE");
-        JButton pvp = new JButton("PvP");
+        JButton pve = new JButton("Survival");
+        JButton pvp = new JButton("Duel");
         JButton online = new JButton("Online");
         JButton back = new JButton("Back");
         pve.addActionListener(this);
@@ -84,9 +104,20 @@ public class NavigationController implements ActionListener {
         gameMode.add(online);
         gameMode.add(back);
         gameMode.setBackground(Color.red);
-        //mainWindows.add(gameMode);
-        //mainWindows.add("South", gameMode);
-        //gameMode.setVisible(false);
+    }
+    
+    private void initSurvival() {
+        JButton nGame = new JButton("New Game");
+        JButton lGame = new JButton("Load Game");
+        JButton back = new JButton("Back");
+        nGame.addActionListener(this);
+        lGame.addActionListener(this);
+        back.addActionListener(this);
+        sPlayer.add(nGame);
+        sPlayer.add(lGame);
+        sPlayer.add(back);
+        sPlayer.setBackground(Color.red);
+
     }
 
     private void initComponentGame() {
@@ -111,7 +142,6 @@ public class NavigationController implements ActionListener {
         fila.add(botonCargarBD);
         fila.add(pausar);
         fila.setBackground(Color.red);
-        mainWindows.setLayout(new BorderLayout());
         mainWindows.add("South", fila);
         // --------------
         botonGuardarBD.addActionListener(gameController);
@@ -121,7 +151,6 @@ public class NavigationController implements ActionListener {
 
     private void lauchGame(String gameMode) {
         Graphics g = mainWindows.getGraphics();
-        //gameController = new GameController(mainWindows, g, gameMode);
         initComponentGame();
         gameController = new GameController(g, mensaje, operacion, mainWindows, gameMode);
     }
@@ -129,38 +158,44 @@ public class NavigationController implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
+            case "Login":
+                mainWindows.add("South", wellcome);
+                lPanel.setVisible(false);   
+                wellcome.setVisible(true);   
+                break;
             case "Start":
-                mainWindows.add("South",gameMode);
+                mainWindows.add("South", gameMode);
                 wellcome.setVisible(false);
-                story.setVisible(false);
                 gameMode.setVisible(true);
                 break;
             case "Story":
                 mainWindows.add("South",story);
                 wellcome.setVisible(false);
-                gameMode.setVisible(false);
                 story.setVisible(true);
                 break;
             case "Back":
+                sPlayer.setVisible(false);
                 story.setVisible(false);
                 gameMode.setVisible(false);
                 wellcome.setVisible(true);
                 break;
-            case "PvE":
+            case "Survival":
+                mainWindows.add("South",sPlayer);
                 gameMode.setVisible(false);
-                //game.setVisible(true);
-                lauchGame("PvE");
+                sPlayer.setVisible(true);
                 break;
-            case "PvP":
+            case "New Game":
+                sPlayer.setVisible(false);
+                lauchGame("Survival");
+                break;
+            case "Load Game":
+                break;
+            case "Duel":
                 gameMode.setVisible(false);
-                //game.setVisible(true);
-                lauchGame("PvP");
+                lauchGame("Duel");
                 break;
             case "Online":
-                //gameMode.setVisible(false);
-                //game.setVisible(true);
-                //lauchGame("Online");
-                break;
+               break;
         }
     }
 }

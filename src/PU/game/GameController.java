@@ -66,11 +66,11 @@ public class GameController implements ActionListener {
         marcador = new Marcador();
         crono = new Chronometer();
         switch (gameMode) {
-            case "PvE":
+            case "Survival":
                 barraJ1 = new Brick(1, new Position(0, 0), 10, contorno.getHeight()+20);
                 barraJ2 = new Brick(1, new Position(contorno.getWidth() - 40, contorno.getHeight() / 2 - 20), 10, 40);
                 break;
-            case "PvP":
+            case "Duel":
                 barraJ1 = new Brick(1, new Position(20, contorno.getHeight() / 2 - 20), 10, 40);
                 barraJ2 = new Brick(1, new Position(contorno.getWidth() - 30, contorno.getHeight() / 2 - 40), 10, 40);
                 break;
