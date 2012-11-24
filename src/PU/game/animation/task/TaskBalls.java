@@ -4,6 +4,7 @@
  */
 package PU.game.animation.task;
 
+import drawable.Boundary;
 import drawable.Drawable;
 import drawable.Position;
 import drawable.movable.Ball;
@@ -19,10 +20,12 @@ import java.util.TimerTask;
 public class TaskBalls extends TimerTask{
     private final Drawable escena;
     private final List<Ball> ballDrawable;
+    private final Boundary contorno;
 
-    public TaskBalls(Drawable escena, List<Ball> ballDrawable) {
+    public TaskBalls(Drawable escena, List<Ball> ballDrawable, Boundary contorno) {
         this.escena = escena;
         this.ballDrawable = ballDrawable;
+        this.contorno = contorno;
     }
 
     @Override
@@ -43,7 +46,7 @@ public class TaskBalls extends TimerTask{
         }
         ball = new Ball((dx), (dy), (2 + rnd.nextInt(8)),
                 new Color(rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)),
-                new Position(300, 300));
+                new Position(contorno.getWidth()/2, contorno.getHeight()/2));
         escena.add(ball);
         ballDrawable.add(ball);
     }

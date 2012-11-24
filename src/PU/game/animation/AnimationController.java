@@ -49,7 +49,7 @@ public class AnimationController extends Thread {
         Marcador marcador = (Marcador) escena.getChild(1);
         Boundary contorno = (Boundary) escena.getChild(0);
         tasks.schedule(new TaskBricks(escena), 0, 10000);
-        tasks.schedule(new TaskBalls(escena,ballDrawable), 0, 5000);
+        tasks.schedule(new TaskBalls(escena, ballDrawable, contorno), 0, 5000);
         crono.start();
         stopping = false;
         while (!stopping) {

@@ -62,7 +62,8 @@ public class NavigationController implements ActionListener {
         lPanel.add(pass);lPanel.add(passT);
         lPanel.add(login);lPanel.add(register);
         mainWindows.add("South", lPanel);
-        lPanel.setVisible(true);       
+        lPanel.setVisible(true);
+        lPanel.setBackground(Color.white);
     }
     
     
@@ -73,7 +74,7 @@ public class NavigationController implements ActionListener {
         storyB.addActionListener(this);
         wellcome.add(start);
         wellcome.add(storyB);
-        wellcome.setBackground(Color.red);
+        wellcome.setBackground(Color.white);
     }
 
     private void initComponentStory() {
@@ -87,7 +88,7 @@ public class NavigationController implements ActionListener {
         back.addActionListener(this);
         story.add(tp);
         story.add(back);
-        story.setBackground(Color.red);
+        story.setBackground(Color.white);
     }
 
     private void initComponentGameMode() {
@@ -103,7 +104,7 @@ public class NavigationController implements ActionListener {
         gameMode.add(pvp);
         gameMode.add(online);
         gameMode.add(back);
-        gameMode.setBackground(Color.red);
+        gameMode.setBackground(Color.white);
     }
     
     private void initSurvival() {
@@ -116,7 +117,7 @@ public class NavigationController implements ActionListener {
         sPlayer.add(nGame);
         sPlayer.add(lGame);
         sPlayer.add(back);
-        sPlayer.setBackground(Color.red);
+        sPlayer.setBackground(Color.white);
 
     }
 
@@ -141,7 +142,7 @@ public class NavigationController implements ActionListener {
         fila.add(operacion);
         fila.add(botonCargarBD);
         fila.add(pausar);
-        fila.setBackground(Color.red);
+        fila.setBackground(Color.white);
         mainWindows.add("South", fila);
         // --------------
         botonGuardarBD.addActionListener(gameController);
