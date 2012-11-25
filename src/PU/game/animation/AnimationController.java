@@ -32,22 +32,24 @@ public class AnimationController extends Thread {
     private final KeyboardController keyboard;
     private Timer tasks = new Timer();
     private final Chronometer crono;
+    private final Marcador marcador;
+    private final Boundary contorno;
     
 
-    public AnimationController(Composite escena, KeyboardController keyboardController, Chronometer crono) {
+    public AnimationController(Composite escena, KeyboardController keyboardController, Chronometer crono, Marcador marcador, Boundary contorno) {
         this.escena = escena;
         this.ballDrawable = Collections.synchronizedList(new ArrayList<Ball>());
         this.brickJugadores = Collections.synchronizedList(new ArrayList<Brick>());
         this.keyboard = keyboardController;
         this.crono = crono;
+        this.marcador = marcador;
+        this.contorno = contorno;
     }
 
     @Override
     public void run() {
         Drawable obj = null;
         Ball ballC = null;
-        Marcador marcador = (Marcador) escena.getChild(1);
-        Boundary contorno = (Boundary) escena.getChild(0);
         tasks.schedule(new TaskBricks(escena), 0, 10000);
         tasks.schedule(new TaskBalls(escena, ballDrawable, contorno), 0, 5000);
         crono.start();
@@ -72,11 +74,6 @@ public class AnimationController extends Thread {
                 //mover barras
                 keyboard.moveP1();
                 keyboard.moveP2();
-                /*
-                 if (obj != null && obj instanceof Ball && ballDrawable.size() > 1) {
-                 escena.remove(obj);
-                 ballDrawable.remove(obj);
-                 }*/
                 //pruebas:
                 //System.out.println(crono.getTime());
                 if (marcador.acabado()) {

@@ -57,7 +57,7 @@ public class GameController implements ActionListener {
         initMotorGraphics();
         vp.addKeyListener(keyboardController);//Control de Teclado
         initConnection();
-        
+
     }
 
     private void initScene(String gameMode) {
@@ -67,7 +67,7 @@ public class GameController implements ActionListener {
         crono = new Chronometer();
         switch (gameMode) {
             case "Survival":
-                barraJ1 = new Brick(1, new Position(0, 0), 10, contorno.getHeight()+20);
+                barraJ1 = new Brick(1, new Position(0, 0), 10, contorno.getHeight() + 20);
                 barraJ2 = new Brick(1, new Position(contorno.getWidth() - 40, contorno.getHeight() / 2 - 20), 10, 40);
                 break;
             case "Duel":
@@ -89,15 +89,15 @@ public class GameController implements ActionListener {
     private void initMotorGraphics() {
         Renderer renderer;
         renderer = new Renderer(escena, g);
-        animationcontroller = new AnimationController(escena, keyboardController, crono);
+        animationcontroller = new AnimationController(escena, keyboardController, crono, marcador, contorno);
         animationcontroller.addBrick(barraJ1);
         animationcontroller.addBrick(barraJ2);
         renderer.start();
         animationcontroller.start();
     }
-    
-    private void initControl(){
-        keyboardController = new KeyboardController(barraJ1,barraJ2,contorno);
+
+    private void initControl() {
+        keyboardController = new KeyboardController(barraJ1, barraJ2, contorno);
     }
 
     private void initConnection() {
@@ -108,14 +108,25 @@ public class GameController implements ActionListener {
         return conexion.sendScene(scene, name, operacion);
     }
 
-    public Drawable loadScene(String name, String operacion) {
-        return conexion.receiveScene(name, operacion);
+    public String loadScene(String name, String operacion) {
+        Composite escenaCargada;
+        List<Drawable> childDrawableCargado = Collections.synchronizedList(new ArrayList<Drawable>());
+        List<Ball> ballDrawableCargada = Collections.synchronizedList(new ArrayList<Ball>());
+        escenaCargada = (Composite) conexion.receiveScene(name, operacion);
+        for (Drawable draw : escenaCargada.getChildDrawable()) {
+            childDrawableCargado.add(draw);
+            if (draw instanceof Ball) {
+                ballDrawableCargada.add((Ball) draw);
+            }
+        }
+        escena.setChildDrawable(childDrawableCargado);
+        animationcontroller.setBallDrawable(ballDrawableCargada);
+        return "Cargado de BD";
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String usuario;
-        Composite escenaCargada;
         System.out.println(e.getActionCommand());
 
         //Guardamos la escema de una BD
@@ -125,21 +136,8 @@ public class GameController implements ActionListener {
         }
         //Cargamos la Escena de una BD
         if (e.getActionCommand().equals("CargarBD")) {
-            List<Drawable> childDrawableCargado = Collections.synchronizedList(new ArrayList<Drawable>());
-            List<Ball> ballDrawableCargada = Collections.synchronizedList(new ArrayList<Ball>());
-
             usuario = mensajeU.getText();
-            escenaCargada = (Composite) loadScene(usuario, "CARGARBD");
-
-            for (Drawable draw : escenaCargada.getChildDrawable()) {
-                childDrawableCargado.add(draw);
-                if (draw instanceof Ball) {
-                    ballDrawableCargada.add((Ball) draw);
-                }
-            }
-            escena.setChildDrawable(childDrawableCargado);
-            animationcontroller.setBallDrawable(ballDrawableCargada);
-            mensajeO.setText("Cargado de BD");
+            mensajeO.setText(this.loadScene(usuario, "CARGARBD"));
         }
     }
 }
