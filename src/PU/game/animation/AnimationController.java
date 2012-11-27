@@ -4,6 +4,7 @@
  */
 package PU.game.animation;
 
+import PU.game.GameStateListener;
 import PU.game.animation.task.TaskBalls;
 import PU.game.animation.task.TaskBricks;
 import drawable.Boundary;
@@ -34,9 +35,10 @@ public class AnimationController extends Thread {
     private final Chronometer crono;
     private final Marcador marcador;
     private final Boundary contorno;
+    private final GameStateListener GameState;
     
 
-    public AnimationController(Composite escena, KeyboardController keyboardController, Chronometer crono, Marcador marcador, Boundary contorno) {
+    public AnimationController(Composite escena, KeyboardController keyboardController, Chronometer crono, Marcador marcador, Boundary contorno, GameStateListener GameState) {
         this.escena = escena;
         this.ballDrawable = Collections.synchronizedList(new ArrayList<Ball>());
         this.brickJugadores = Collections.synchronizedList(new ArrayList<Brick>());
@@ -44,6 +46,7 @@ public class AnimationController extends Thread {
         this.crono = crono;
         this.marcador = marcador;
         this.contorno = contorno;
+        this.GameState = GameState;
     }
 
     @Override
@@ -81,6 +84,7 @@ public class AnimationController extends Thread {
                     tasks.cancel();
                     crono.stop();
                     setStopping(true);
+                    GameState.EndGame();
                 }
             }
 

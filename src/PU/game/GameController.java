@@ -7,8 +7,10 @@ package PU.game;
 import PU.game.animation.AnimationController;
 import PU.game.animation.KeyboardController;
 import PU.game.view.Renderer;
+import PU.navigation.NavigationStateListener;
 import connection.ConnectionController;
 import connection.ConnectionManager;
+import connection.score.ScoreConnection;
 import drawable.Boundary;
 import drawable.Chronometer;
 import drawable.Composite;
@@ -25,12 +27,13 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.JApplet;
 import javax.swing.JTextField;
+import nodrawable.Score;
 
 /**
  *
  * @author David
  */
-public class GameController implements ActionListener {
+public class GameController implements ActionListener, GameStateListener {
 
     private Composite escena;
     private Boundary contorno;
@@ -38,16 +41,22 @@ public class GameController implements ActionListener {
     private Chronometer crono;
     private Brick barraJ1;
     private Brick barraJ2;
+    
     private AnimationController animationcontroller;
+    
     private ConnectionManager conexion;
+    private ScoreConnection conexionScore;
+    
     private JTextField mensajeU;
     private JTextField mensajeO;
-    private boolean pausado = false;
     private JApplet vp;
     private Graphics g;
     private KeyboardController keyboardController;
+    private final NavigationStateListener navigationState;
+    private Score score;
+    
 
-    public GameController(Graphics g, JTextField mensajeU, JTextField mensajeO, JApplet vp, String gameMode) {
+    public GameController(Graphics g, JTextField mensajeU, JTextField mensajeO, JApplet vp, String gameMode, NavigationStateListener navigationState) {
         this.g = g;
         this.mensajeU = mensajeU;
         this.mensajeO = mensajeO;
@@ -57,13 +66,15 @@ public class GameController implements ActionListener {
         initMotorGraphics();
         vp.addKeyListener(keyboardController);//Control de Teclado
         initConnection();
-
+        this.navigationState = navigationState;
     }
 
     private void initScene(String gameMode) {
         escena = new Composite();
-        contorno = new Boundary(new Position(0, 0), vp.getWidth(), vp.getHeight() - 40);
+        contorno = new Boundary(new Position(0, 0), vp.getWidth(), vp.getHeight());
         marcador = new Marcador();
+        score = new Score();
+        score.setModo(gameMode);
         crono = new Chronometer();
         switch (gameMode) {
             case "Survival":
@@ -89,7 +100,7 @@ public class GameController implements ActionListener {
     private void initMotorGraphics() {
         Renderer renderer;
         renderer = new Renderer(escena, g);
-        animationcontroller = new AnimationController(escena, keyboardController, crono, marcador, contorno);
+        animationcontroller = new AnimationController(escena, keyboardController, crono, marcador, contorno, this);
         animationcontroller.addBrick(barraJ1);
         animationcontroller.addBrick(barraJ2);
         renderer.start();
@@ -102,6 +113,7 @@ public class GameController implements ActionListener {
 
     private void initConnection() {
         conexion = new ConnectionController();
+        conexionScore = new ScoreConnection(vp);
     }
 
     public String saveScene(Drawable scene, String name, String operacion) {
@@ -139,5 +151,17 @@ public class GameController implements ActionListener {
             usuario = mensajeU.getText();
             mensajeO.setText(this.loadScene(usuario, "CARGARBD"));
         }
+    }
+
+    @Override
+    public void EndGame() {
+        score.setTime(crono.getTime());
+        score.setId(mensajeU.getText());
+        navigationState.viewRanking(conexionScore.saveScore(score));
+    }
+
+    @Override
+    public void Pause() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
