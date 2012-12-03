@@ -5,7 +5,7 @@
 package PU.navigation;
 
 import PU.game.GameController;
-import PU.navigation.panel.ControlsPanel;
+import PU.navigation.panel.CreditsPanel;
 import PU.navigation.panel.GameModePanel;
 import PU.navigation.panel.GamePanel;
 import PU.navigation.panel.LoginPanel;
@@ -36,7 +36,9 @@ public class NavigationController implements ActionListener, NavigationStateList
     private StoryPanel storyPanel;
     private GameModePanel gameModePanel;
     private GamePanel gamePanel;
-    private ControlsPanel controlsPanel;
+    private CreditsPanel creditsPanel;
+    private Graphics g;
+    private ImageIcon fondo;
 
     public NavigationController(JApplet mainWindows) {
         this.mainWindows = mainWindows;
@@ -52,9 +54,12 @@ public class NavigationController implements ActionListener, NavigationStateList
     }
 
     private void initComponentWellcome() {
-        wellcomePanel = new WellcomePanel(fondo, this);
-        storyPanel = new StoryPanel(fondo, this);
-        controlsPanel = new ControlsPanel(fondo, this);
+        wellcomePanel = new WellcomePanel(fondo,this);
+        creditsPanel = new CreditsPanel(fondo,this);
+    }
+
+    private void initComponentStory() {
+        storyPanel = new StoryPanel(fondo,this);
     }
 
     private void initComponentGameMode() {
@@ -82,11 +87,14 @@ public class NavigationController implements ActionListener, NavigationStateList
             case "Game mode":
                 mainWindows.add(gameModePanel);
                 wellcomePanel.setVisible(false);
+                creditsPanel.setVisible(false);
+                storyPanel.setVisible(false);
                 gameModePanel.setVisible(true);
                 break;
             case "Story":
                 mainWindows.add(storyPanel);
                 wellcomePanel.setVisible(false);
+                creditsPanel.setVisible(false);
                 storyPanel.setVisible(true);
 
                 break;
@@ -94,6 +102,12 @@ public class NavigationController implements ActionListener, NavigationStateList
                 mainWindows.add(controlsPanel);
                 wellcomePanel.setVisible(false);
                 controlsPanel.setVisible(true);
+                break;
+            case "Credits":
+                mainWindows.add(creditsPanel);
+                wellcomePanel.setVisible(false);
+                storyPanel.setVisible(false);
+                creditsPanel.setVisible(true);
                 break;
             case "Back":
                 storyPanel.setVisible(false);

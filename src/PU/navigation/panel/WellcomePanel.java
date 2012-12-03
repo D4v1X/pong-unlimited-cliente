@@ -36,9 +36,10 @@ public class WellcomePanel extends JPanel {
         control = new JButton("Controls");
         control.setBounds(250, 425, 100, 25);
         control.addActionListener(nController);
-        
+
         credits = new JButton("Credits");
         credits.setBounds(250, 450, 100, 25);
+        credits.addActionListener(nController);
         
         add(start);
         add(story);
