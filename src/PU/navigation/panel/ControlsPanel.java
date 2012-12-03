@@ -16,13 +16,13 @@ import javax.swing.JTextPane;
  *
  * @author davidsantiagobarrera
  */
-public class StoryPanel extends JPanel {
+public class ControlsPanel extends JPanel {
 
     private final ImageIcon fondo;
     private final JButton back;
     private final JTextPane tp;
 
-    public StoryPanel(ImageIcon fondo, NavigationController nController) {
+    public ControlsPanel(ImageIcon fondo, NavigationController nController) {
         this.fondo = fondo;
         setLayout(null);
         back = new JButton("Back");
@@ -30,13 +30,17 @@ public class StoryPanel extends JPanel {
         back.addActionListener(nController);
 
         tp = new JTextPane();
-        tp.setText("Once upon a time in a forbidden galaxy, two lords of void, "
-                + "one evil, one psyco, created an overwhelming battle to death "
-                + "just to amuse themseft. I was called PONGUnlimited.");
+        tp.setText("Player 1:\n"
+                + "     UP   = Flecha Arriba\n"
+                + "     Down = Flecha Abajo\n"
+                + "Player 2:\n"
+                + "     UP   = Tecla W\n"
+                + "     Down = Tecla S\n"
+                + "Pause = Esc\n"
+                + "Retry = Teclas R\n");
         tp.setForeground(Color.white);
-        tp.setBounds(175, 350, 250, 100);
+        tp.setBounds(220, 305, 160, 141);
         tp.setBackground(Color.black);
-
         add(tp);
         add(back);
     }

@@ -19,7 +19,6 @@ public class WellcomePanel extends JPanel {
     private final JButton start;
     private final JButton story;
     private final ImageIcon fondo;
-    private final JButton settings;
     private final JButton credits;
     private final JButton control;
 
@@ -27,19 +26,16 @@ public class WellcomePanel extends JPanel {
         this.fondo = fondo;
         setLayout(null);
         start = new JButton("Game mode");
-        start.setBounds(250, 350, 100, 25);
+        start.setBounds(250, 375, 100, 25);
         start.addActionListener(nController);
         
         story = new JButton("Story");
-        story.setBounds(250, 375, 100, 25);
+        story.setBounds(250, 400, 100, 25);
         story.addActionListener(nController);
         
         control = new JButton("Controls");
-        control.setBounds(250, 400, 100, 25);
+        control.setBounds(250, 425, 100, 25);
         control.addActionListener(nController);
-        
-        settings = new JButton("Settings");
-        settings.setBounds(250, 425, 100, 25);
         
         credits = new JButton("Credits");
         credits.setBounds(250, 450, 100, 25);
@@ -47,7 +43,6 @@ public class WellcomePanel extends JPanel {
         add(start);
         add(story);
         add(control);
-        add(settings);
         add(credits);
     }
 
