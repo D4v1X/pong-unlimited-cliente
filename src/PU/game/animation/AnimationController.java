@@ -18,15 +18,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author David
  */
-//public class AnimationController extends Thread implements KeyListener {
 public class AnimationController extends Thread {
 
-    private boolean stopping;
+    private boolean stopping = false;
+    private boolean paused = false;
     private Drawable escena;
     private List<Ball> ballDrawable;
     private List<Brick> brickJugadores;
@@ -36,7 +38,6 @@ public class AnimationController extends Thread {
     private final Marcador marcador;
     private final Boundary contorno;
     private final GameStateListener GameState;
-    
 
     public AnimationController(Composite escena, KeyboardController keyboardController, Chronometer crono, Marcador marcador, Boundary contorno, GameStateListener GameState) {
         this.escena = escena;
@@ -58,41 +59,55 @@ public class AnimationController extends Thread {
         crono.start();
         stopping = false;
         while (!stopping) {
-            synchronized (ballDrawable) {// Monitor para controlar la concurrencia
-                for (Ball ball : ballDrawable) {
-                    //mover bolas
-                    ball.move();
-                    obj = escena.colision(ball);//detectar colisiones
-                    if (obj != null && obj instanceof Ball) {
-                        ballC = (Ball) obj;
-                        if (ballC.getPosition().getX() == 0) {
-                            marcador.addPuntoDcha();
-                        }
-                        if (ballC.getPosition().getX() == contorno.getWidth()) {
-                            marcador.addPuntoIzda();
-                        }
-
+            try {
+                synchronized (this) {
+                    if (paused) {
+                        System.out.println("Paused");
+                        wait();
+                        System.out.println("Resumed");
                     }
                 }
-                //mover barras
-                keyboard.moveP1();
-                keyboard.moveP2();
-                //pruebas:
-                //System.out.println(crono.getTime());
-                if (marcador.acabado()) {
-                    tasks.cancel();
-                    tasks.cancel();
-                    crono.stop();
-                    setStopping(true);
-                    GameState.EndGame();
-                }
-            }
+                synchronized (ballDrawable) {// Monitor para controlar la concurrencia
+                    for (Ball ball : ballDrawable) {
+                        //mover bolas
+                        ball.move();
+                        obj = escena.colision(ball);//detectar colisiones
+                        if (obj != null && obj instanceof Ball) {
+                            ballC = (Ball) obj;
+                            if (ballC.getPosition().getX() == 0) {
+                                marcador.addPuntoDcha();
+                            }
+                            if (ballC.getPosition().getX() == contorno.getWidth()) {
+                                marcador.addPuntoIzda();
+                            }
 
-            try {
+                        }
+                    }
+                    //mover barras
+                    keyboard.moveP1();
+                    keyboard.moveP2();
+                    if (marcador.acabado()) {
+                        tasks.cancel();
+                        tasks.cancel();
+                        GameState.endGame();
+                    }
+                }
                 Thread.sleep(10);
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ex) {
+                Logger.getLogger(AnimationController.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error Exception");
+                System.out.println(ex.getMessage());
             }
         }
+    }
+
+    public synchronized void pause() {
+        paused = true;
+    }
+
+    public synchronized void continuar() {
+        paused = false;
+        notify();
     }
 
     public void addBall(Ball ball) {
@@ -101,10 +116,6 @@ public class AnimationController extends Thread {
 
     public void addBrick(Brick brick) {
         this.brickJugadores.add(brick);
-    }
-
-    public boolean isStopping() {
-        return stopping;
     }
 
     public void setStopping(boolean stopping) {
@@ -118,5 +129,4 @@ public class AnimationController extends Thread {
     public void setBallDrawable(List<Ball> ballDrawable) {
         this.ballDrawable = ballDrawable;
     }
-
 }

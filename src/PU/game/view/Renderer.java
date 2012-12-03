@@ -12,6 +12,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,7 +21,8 @@ import java.awt.image.BufferedImage;
  */
 public class Renderer extends Thread {
 
-    private boolean stopping;
+    private boolean stopping = false;
+    private boolean paused = false;
     private Composite escena;
     private Graphics g;
 
@@ -41,27 +44,46 @@ public class Renderer extends Thread {
         //Creamos un nuevo Graphics q no esta visible
         g = buffer.getGraphics();
         while (!stopping) {
-            //Boundary contorno = (Boundary) escena.getChild(0);
-            g.clearRect(//Limpiamos la pantalla
-                    contorno.getPosition().getX(), contorno.getPosition().getY(),
-                    contorno.getWidth(), contorno.getHeight());
-            escena.render(g);         
-            //Tratamos el Fondo y mejoramos la Calidad de renderizado de los objetos
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setBackground(Color.DARK_GRAY);
-            RenderingHints qualityHints;
-            qualityHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            qualityHints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-            g2.setRenderingHints(qualityHints);
-            //Le pasamos el Dibujo completo al Graphics del JApplet evitamos parpadeo
-            Pantalla.drawImage(buffer, 0, 0, null);
             try {
+                synchronized (this) {
+                    if (paused) {
+                        System.out.println("Paused");
+                        wait();
+                        System.out.println("Resumed");
+                    }
+                }
+                g.clearRect(//Limpiamos la pantalla
+                        contorno.getPosition().getX(), contorno.getPosition().getY(),
+                        contorno.getWidth(), contorno.getHeight());
+                escena.render(g);
+                //Tratamos el Fondo y mejoramos la Calidad de renderizado de los objetos
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setBackground(Color.DARK_GRAY);
+                RenderingHints qualityHints;
+                qualityHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                qualityHints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                g2.setRenderingHints(qualityHints);
+                //Le pasamos el Dibujo completo al Graphics del JApplet evitamos parpadeo
+                Pantalla.drawImage(buffer, 0, 0, null);
                 Thread.sleep(10);
-                //yield()
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Renderer.class.getName()).log(Level.SEVERE, null, ex);
                 System.out.println("Error Exception");
-                System.out.println(e.getMessage());
+                System.out.println(ex.getMessage());
             }
         }
+    }
+
+    public void setStopping(boolean stopping) {
+        this.stopping = stopping;
+    }
+
+    public synchronized void pause() {
+        paused = true;
+    }
+
+    public synchronized void continuar() {
+        paused = false;
+        notify();
     }
 }

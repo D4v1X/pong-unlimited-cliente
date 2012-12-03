@@ -41,12 +41,10 @@ public class GameController implements ActionListener, GameStateListener {
     private Chronometer crono;
     private Brick barraJ1;
     private Brick barraJ2;
-    
     private AnimationController animationcontroller;
-    
+    private Renderer renderer;
     private ConnectionManager conexion;
     private ScoreConnection conexionScore;
-    
     private JTextField mensajeU;
     private JTextField mensajeO;
     private JApplet vp;
@@ -54,13 +52,13 @@ public class GameController implements ActionListener, GameStateListener {
     private KeyboardController keyboardController;
     private final NavigationStateListener navigationState;
     private Score score;
-    
+    private final String gameMode;
 
-    public GameController(Graphics g, JTextField mensajeU, JTextField mensajeO, JApplet vp, String gameMode, NavigationStateListener navigationState) {
+    public GameController(Graphics g, JTextField mensajeU, JApplet vp, String gameMode, NavigationStateListener navigationState) {
         this.g = g;
         this.mensajeU = mensajeU;
-        this.mensajeO = mensajeO;
         this.vp = vp;
+        this.gameMode = gameMode;
         initScene(gameMode);
         initControl();
         initMotorGraphics();
@@ -98,7 +96,6 @@ public class GameController implements ActionListener, GameStateListener {
     }
 
     private void initMotorGraphics() {
-        Renderer renderer;
         renderer = new Renderer(escena, g);
         animationcontroller = new AnimationController(escena, keyboardController, crono, marcador, contorno, this);
         animationcontroller.addBrick(barraJ1);
@@ -108,7 +105,7 @@ public class GameController implements ActionListener, GameStateListener {
     }
 
     private void initControl() {
-        keyboardController = new KeyboardController(barraJ1, barraJ2, contorno);
+        keyboardController = new KeyboardController(barraJ1, barraJ2, contorno, this);
     }
 
     private void initConnection() {
@@ -154,14 +151,42 @@ public class GameController implements ActionListener, GameStateListener {
     }
 
     @Override
-    public void EndGame() {
+    public void endGame() {
+        crono.stop();
+        animationcontroller.setStopping(true);
+        renderer.setStopping(true);
         score.setTime(crono.getTime());
         score.setId(mensajeU.getText());
         navigationState.viewRanking(conexionScore.saveScore(score));
     }
 
     @Override
-    public void Pause() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void pauseGame() {
+        crono.stop();
+        renderer.pause();
+        animationcontroller.pause();
+    }
+
+    @Override
+    public void resumeGame() {
+        crono.start();
+        renderer.continuar();
+        animationcontroller.continuar();
+    }
+
+    @Override
+    public void retryGame() {
+        crono.stop();
+        renderer.pause();
+        animationcontroller.pause();
+        initScene(gameMode);
+        initControl();
+        initMotorGraphics();
+        vp.addKeyListener(keyboardController);//Control de Teclado
+        initConnection();
+        renderer.continuar();
+        animationcontroller.continuar();
+        crono.reset();
+        crono.start();
     }
 }

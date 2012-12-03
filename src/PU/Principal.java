@@ -5,6 +5,7 @@ package PU;
  * and open the template in the editor.
  */
 import PU.navigation.NavigationController;
+import java.awt.BorderLayout;
 import javax.swing.JApplet;
 
 /**
@@ -23,6 +24,7 @@ public class Principal extends JApplet {
     public void init() {
         this.setSize(600, 500);
         setFocusable(true);
+        setLayout(new BorderLayout());
         NavigationController nController =  new NavigationController(this);
     }
 

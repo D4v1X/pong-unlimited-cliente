@@ -4,6 +4,7 @@
  */
 package PU.game.animation;
 
+import PU.game.GameStateListener;
 import drawable.Boundary;
 import drawable.movable.Brick;
 import java.awt.event.KeyEvent;
@@ -18,13 +19,16 @@ public class KeyboardController implements KeyListener {
     private boolean p1FlagUp, p1FlagDown, p2FlagUp, p2FlagDown;
     private final Brick barraJ1, barraJ2;
     private final Boundary contorno;
+    private final GameStateListener gameState;
+    private boolean paused = true;
 
-    public KeyboardController(Brick barraJ1, Brick barraJ2, Boundary contorno) {
+    public KeyboardController(Brick barraJ1, Brick barraJ2, Boundary contorno, GameStateListener gameState) {
         this.barraJ1 = barraJ1;
         this.barraJ2 = barraJ2;
         this.contorno = contorno;
+        this.gameState = gameState;
     }
-    
+
     @Override
     public void keyTyped(KeyEvent e) {
         System.out.println("wep");
@@ -48,6 +52,17 @@ public class KeyboardController implements KeyListener {
             case KeyEvent.VK_DOWN:
                 p2FlagDown = true;
                 break;
+            case KeyEvent.VK_ESCAPE:
+                if(paused){
+                    gameState.pauseGame();
+                    paused = false;
+                }else{
+                    gameState.resumeGame();
+                    paused = true;
+                }
+                break;
+            case KeyEvent.VK_R:
+                gameState.retryGame();
         }
     }
 

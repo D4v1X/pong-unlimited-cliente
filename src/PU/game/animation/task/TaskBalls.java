@@ -45,7 +45,7 @@ public class TaskBalls extends TimerTask{
             dy--;
         }
         ball = new Ball((dx), (dy), (2 + rnd.nextInt(8)),
-                new Color(rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)),
+                new Color(255, rnd.nextInt(255), rnd.nextInt(255)),
                 new Position(contorno.getWidth()/2, contorno.getHeight()/2));
         escena.add(ball);
         ballDrawable.add(ball);
