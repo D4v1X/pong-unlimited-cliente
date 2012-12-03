@@ -43,6 +43,7 @@ public class CreditsPanel extends JPanel{
         tp.setForeground(Color.white);
         tp.setBounds(220, 310, 250, 130);
         tp.setBackground(Color.black);
+        tp.setEnabled(false);
 
         add(tp);
         add(back);

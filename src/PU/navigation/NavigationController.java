@@ -5,6 +5,7 @@
 package PU.navigation;
 
 import PU.game.GameController;
+import PU.navigation.panel.ControlsPanel;
 import PU.navigation.panel.CreditsPanel;
 import PU.navigation.panel.GameModePanel;
 import PU.navigation.panel.GamePanel;
@@ -37,8 +38,7 @@ public class NavigationController implements ActionListener, NavigationStateList
     private GameModePanel gameModePanel;
     private GamePanel gamePanel;
     private CreditsPanel creditsPanel;
-    private Graphics g;
-    private ImageIcon fondo;
+    private ControlsPanel controlsPanel;
 
     public NavigationController(JApplet mainWindows) {
         this.mainWindows = mainWindows;
@@ -54,12 +54,10 @@ public class NavigationController implements ActionListener, NavigationStateList
     }
 
     private void initComponentWellcome() {
-        wellcomePanel = new WellcomePanel(fondo,this);
-        creditsPanel = new CreditsPanel(fondo,this);
-    }
-
-    private void initComponentStory() {
-        storyPanel = new StoryPanel(fondo,this);
+        wellcomePanel = new WellcomePanel(fondo, this);
+        storyPanel = new StoryPanel(fondo, this);
+        creditsPanel = new CreditsPanel(fondo, this);
+        controlsPanel = new ControlsPanel(fondo, this);
     }
 
     private void initComponentGameMode() {
@@ -81,50 +79,55 @@ public class NavigationController implements ActionListener, NavigationStateList
         switch (e.getActionCommand()) {
             case "Login":
                 mainWindows.add(wellcomePanel);
-                loginPanel.setVisible(false);
+                setInvisiblePanel();
                 wellcomePanel.setVisible(true);
                 break;
             case "Game mode":
                 mainWindows.add(gameModePanel);
-                wellcomePanel.setVisible(false);
-                creditsPanel.setVisible(false);
-                storyPanel.setVisible(false);
+                setInvisiblePanel();
                 gameModePanel.setVisible(true);
                 break;
             case "Story":
                 mainWindows.add(storyPanel);
-                wellcomePanel.setVisible(false);
-                creditsPanel.setVisible(false);
+               setInvisiblePanel();
                 storyPanel.setVisible(true);
 
                 break;
             case "Controls":
                 mainWindows.add(controlsPanel);
-                wellcomePanel.setVisible(false);
+                setInvisiblePanel();
                 controlsPanel.setVisible(true);
                 break;
             case "Credits":
                 mainWindows.add(creditsPanel);
-                wellcomePanel.setVisible(false);
-                storyPanel.setVisible(false);
+                setInvisiblePanel();
                 creditsPanel.setVisible(true);
                 break;
             case "Back":
-                storyPanel.setVisible(false);
-                gameModePanel.setVisible(false);
+                setInvisiblePanel();
                 wellcomePanel.setVisible(true);
                 break;
             case "Survival":
-                gameModePanel.setVisible(false);
+                setInvisiblePanel();
                 lauchGame("Survival");
                 break;
             case "Duel":
-                gameModePanel.setVisible(false);
+                setInvisiblePanel();
                 lauchGame("Duel");
                 break;
             case "Online":
                 break;
         }
+    }
+
+    private void setInvisiblePanel() {
+        loginPanel.setVisible(false);
+        wellcomePanel.setVisible(false);
+        storyPanel.setVisible(false);
+        gameModePanel.setVisible(false);
+        //gamePanel.setVisible(false);
+        creditsPanel.setVisible(false);
+        controlsPanel.setVisible(false);
     }
 
     @Override

@@ -36,6 +36,7 @@ public class StoryPanel extends JPanel {
         tp.setForeground(Color.white);
         tp.setBounds(175, 350, 250, 100);
         tp.setBackground(Color.black);
+        tp.setEnabled(false);
 
         add(tp);
         add(back);
